@@ -84,10 +84,10 @@ export class HomeComponent implements OnInit {
 
   getTrendIcon(){
     if(Object.keys(this.lastPrice).length>0){
-      if(this.currentPrice.spot > this.lastPrice.spot){
+      if(this.currentPrice['spot'] > this.lastPrice['spot']){
         return 'trending_up';
       }
-      if(this.currentPrice.spot < this.lastPrice.spot){
+      if(this.currentPrice['spot'] < this.lastPrice['spot']){
         return 'trending_down';
       }
     }
@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
 
   getPercentage(){
     if(Object.keys(this.lastPrice).length>0){
-      return (this.currentPrice.spot-this.lastPrice.spot)/this.lastPrice.spot;
+      return (this.currentPrice['spot']-this.lastPrice['spot'])/this.lastPrice['spot'];
     }
     return 0;
   }
@@ -105,8 +105,8 @@ export class HomeComponent implements OnInit {
 
   getBTCHisto(){
     this.Cryto.getBTCDailyHisto().subscribe(res=>{
-      this.chartTime = res.Data.map(x => moment.unix(x.time).format('HH:mm').toString());
-      this.chartPrice = res.Data.map(x => x.close);
+      this.chartTime = res['Data'].map(x => moment.unix(x.time).format('HH:mm').toString());
+      this.chartPrice = res['Data'].map(x => x.close);
       this.setChart();
     });
   }
@@ -133,10 +133,10 @@ export class HomeComponent implements OnInit {
   }
 
   submitBid(){
-    if(!this.currentPrice.spot){
+    if(!this.currentPrice['spot']){
       return;
     }
-    if(this.bidPrice > this.currentPrice.spot){
+    if(this.bidPrice > this.currentPrice['spot']){
       this.bids.push({time:moment().format('DD/MM/YY, HH:mm:ss').toString(), bidPrice:this.bidPrice});
       //do submit
       this.isValid = true;
@@ -149,7 +149,7 @@ export class HomeComponent implements OnInit {
         this.tooltip.open();
       }
       this.isValid = false;
-      this.input1TooltipContent = 'The Current Live Price is $'+this.currentPrice.spot;
+      this.input1TooltipContent = 'The Current Live Price is $'+this.currentPrice['spot'];
     }
   }
 
