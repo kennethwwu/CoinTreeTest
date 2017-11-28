@@ -1,0 +1,66 @@
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">BTC Price</h3>
+            <h6 *ngIf="!currentPrice.spot">Loading...</h6>
+            <div *ngIf="currentPrice.spot">
+              <h4 class="card-subtitle mb-2" [ngClass]="{'text-success': currentPrice.spot>lastPrice.spot, 'text-danger': currentPrice.spot<lastPrice.spot, 'text-muted': getPercentage()==0}">AUD {{currentPrice.spot | currency }} <i class="material-icons">{{getTrendIcon()}}</i></h4>
+              <h6 class="card-subtitle mb-2" [ngClass]="{'text-success': currentPrice.spot>lastPrice.spot, 'text-danger': currentPrice.spot<lastPrice.spot, 'text-muted': getPercentage()==0}">{{getPercentage()| percent:'1.2-2'}}</h6>
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <span class="text-muted">ask:{{currentPrice.ask | currency }}</span>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                  <span class="text-muted">bid:{{currentPrice.bid | currency }}</span>
+                </div>
+              </div>
+              <!-- <span class="text-muted">ask:{{currentPrice.ask | currency }}</span>
+              <span class="text-muted float-right">bid:{{currentPrice.bid | currency }}</span> -->
+            </div>
+          </div>
+        </div>
+        <div class="row bid-list">
+          <div class="col-md-12">
+              <ul class="list-group" *ngIf="bids.length>0">
+                  <li *ngFor="let bid of bids; index as i;" [@flyInOut] class="list-group-item">#{{i+1}} {{bid.time}} <span class="float-right">{{bid.bidPrice | currency:'AUD'}}</span></li>
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-8">
+        <div class="row">
+          <div *ngIf="chartPrice.length>0" class="col-md-12">
+              <canvas baseChart width="400" height="200"
+              [datasets]="lineChartData"
+              [labels]="lineChartLabels"
+              [legend]="lineChartLegend"
+              [options]="lineChartOptions"
+              [chartType]="chartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <form (keydown)="pressToSubmit($event)">
+              <div class="form-group">
+                  <label for="input1">Enter Your Bid...</label>
+                  <div class="input-group">
+                    <ng-template #tipContent><b>{{input1TooltipContent}}</b></ng-template>
+                    <input currencyMask [(ngModel)]="bidPrice" id="input1" name="bidPrice" class="form-control" [ngClass]="{'is-invalid':!isValid}" #t="ngbTooltip" [ngbTooltip]="tipContent" triggers="manual" placeholder="Enter your bid..." aria-label="Enter your bid...">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-secondary" type="button" (click)="submitBid()">Submit!</button>
+                    </span>
+                  </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
